@@ -19,6 +19,32 @@ public class Inscripciones {
     @JoinColumn(name = "asignacion_id", nullable = false)
     private Asignaciones asignacion;
 
-    // Getters y setters
-    // ...
+    // constructor
+    public Inscripciones() {
+    }
+    public Inscripciones(Estudiantes estudiante, Asignaciones asignacion) {
+        this.estudiante = estudiante;
+        this.asignacion = asignacion;
+    }
+    // getters and setters
+    public Integer getId() {
+        return id;
+    }
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Estudiantes getEstudiante() {
+        return estudiante;
+    }
+    public void setEstudiante(Estudiantes estudiante) {
+        this.estudiante = estudiante;
+    }
+    public Asignaciones getAsignacion() {
+        return asignacion;
+    }
+    public void setAsignacion(Asignaciones asignacion) {
+        this.asignacion = asignacion;
+    }
+    
 }

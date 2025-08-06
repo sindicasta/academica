@@ -12,6 +12,24 @@ public class Cursos {
     @Column(nullable = false, unique = true, length = 100)
     private String nombre;
 
-    // Getters y setters
-    // ...
+    // constructor
+    public Cursos() {
+    }
+    public Cursos(String nombre) {
+        this.nombre = nombre;
+    }
+    // getters and setters
+    public Integer getId() {
+        return id;
+    }
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    public String getNombre() {
+        return nombre;
+    }
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+    
 }

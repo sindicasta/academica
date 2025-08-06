@@ -19,7 +19,7 @@ public class Asignaciones {
     @JoinColumn(name = "curso_id", nullable = false)
     private Cursos curso;
 
-    // Constructor por defecto
+    // Constructor
     public Asignaciones() {
     }
     // Constructor con parámetros
