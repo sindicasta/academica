@@ -14,7 +14,7 @@ public class Profesores {
     @Column(nullable = false, length = 100)
     private String apellido;
 
-    // constructor, getters, and setters
+    // constructor
     public Profesores() {
     }
     public Profesores(String nombre, String apellido) {
@@ -42,5 +42,4 @@ public class Profesores {
         this.apellido = apellido;
     }
 
-    //prueba de commit
 }
