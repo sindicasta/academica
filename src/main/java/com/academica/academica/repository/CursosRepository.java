@@ -1,14 +1,13 @@
 package com.academica.academica.repository;
 
+import com.academica.academica.entities.Cursos;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import com.academica.academica.entities.Cursos;
+
+import java.util.List;
 
 @Repository
 public interface CursosRepository extends JpaRepository<Cursos, Integer> {
-
-    boolean existsByNombre(String nombre);
-
-    Cursos findByNombre(String nombre);
+    // Buscar cursos por nombre
+    List<Cursos> findByNombreContainingIgnoreCase(String nombre);
 }
-

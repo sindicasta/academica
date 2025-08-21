@@ -1,41 +1,53 @@
 package com.academica.academica.service;
 
+import com.academica.academica.dto.ProfesoresDTO;
 import com.academica.academica.entities.Profesores;
 import com.academica.academica.repository.ProfesoresRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProfesoresService {
 
-    @Autowired
-    private ProfesoresRepository profesoresRepository;
+    private final ProfesoresRepository repository;
 
-    public List<Profesores> listarTodos() {
-        return profesoresRepository.findAll();
+    public ProfesoresService(ProfesoresRepository repository) {
+        this.repository = repository;
     }
 
-    public Optional<Profesores> obtenerPorId(Integer id) {
-        return profesoresRepository.findById(id);
+    public List<ProfesoresDTO> getAll() {
+        return repository.findAll()
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
-    public Profesores guardar(Profesores profesor) {
-        return profesoresRepository.save(profesor);
+    public Optional<ProfesoresDTO> getById(Integer id) {
+        return repository.findById(id).map(this::convertToDTO);
     }
 
-    public void eliminar(Integer id) {
-        profesoresRepository.deleteById(id);
+    // Filtro por apellido
+    public List<ProfesoresDTO> findByApellido(String apellido) {
+        return repository.findByApellido(apellido)
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
-    public List<Profesores> buscarPorNombre(String nombre) {
-        return profesoresRepository.findByNombreContainingIgnoreCase(nombre);
+    // Métodos CRUD (con Entity)
+    public Profesores save(Profesores profesor) {
+        return repository.save(profesor);
     }
 
-    public List<Profesores> buscarPorApellido(String apellido) {
-        return profesoresRepository.findByApellidoContainingIgnoreCase(apellido);
+    public void delete(Integer id) {
+        repository.deleteById(id);
+    }
+
+    // Conversión Entity → DTO
+    private ProfesoresDTO convertToDTO(Profesores profesor) {
+        return new ProfesoresDTO(profesor.getId(), profesor.getNombre(), profesor.getApellido());
     }
 }
-

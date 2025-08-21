@@ -1,55 +1,46 @@
 package com.academica.academica.controller;
 
+import com.academica.academica.dto.AsignacionDTO;
 import com.academica.academica.entities.Asignaciones;
-import com.academica.academica.entities.Cursos;
-import com.academica.academica.entities.Profesores;
 import com.academica.academica.service.AsignacionesService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/asignaciones")
 public class AsignacionesController {
 
-    @Autowired
-    private AsignacionesService asignacionesService;
+    private final AsignacionesService service;
+
+    public AsignacionesController(AsignacionesService service) {
+        this.service = service;
+    }
 
     @GetMapping
-    public List<Asignaciones> listar() {
-        return asignacionesService.listarTodas();
+    public List<AsignacionDTO> getAll(@RequestParam(required = false) Integer profesorId) {
+        if (profesorId != null) {
+            return service.findByProfesorId(profesorId);
+        }
+        return service.getAll();
     }
 
     @GetMapping("/{id}")
-    public Optional<Asignaciones> obtener(@PathVariable Integer id) {
-        return asignacionesService.obtenerPorId(id);
+    public ResponseEntity<AsignacionDTO> getById(@PathVariable Integer id) {
+        return service.getById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public Asignaciones crear(@RequestBody Asignaciones asignacion) {
-        return asignacionesService.guardar(asignacion);
+    public Asignaciones create(@RequestBody Asignaciones asignacion) {
+        return service.save(asignacion);
     }
 
     @DeleteMapping("/{id}")
-    public void eliminar(@PathVariable Integer id) {
-        asignacionesService.eliminar(id);
-    }
-
-    @GetMapping("/por-profesor")
-    public List<Asignaciones> porProfesor(@RequestBody Profesores profesor) {
-        return asignacionesService.buscarPorProfesor(profesor);
-    }
-
-    @GetMapping("/por-curso")
-    public List<Asignaciones> porCurso(@RequestBody Cursos curso) {
-        return asignacionesService.buscarPorCurso(curso);
-    }
-
-    @PostMapping("/existe")
-    public boolean existe(@RequestBody Asignaciones asignacion) {
-        return asignacionesService.existe(asignacion.getProfesor(), asignacion.getCurso());
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
-

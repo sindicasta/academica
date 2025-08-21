@@ -1,43 +1,46 @@
 package com.academica.academica.controller;
 
+import com.academica.academica.dto.CursosDTO;
 import com.academica.academica.entities.Cursos;
 import com.academica.academica.service.CursosService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/cursos")
 public class CursosController {
 
-    @Autowired
-    private CursosService cursosService;
+    private final CursosService service;
+
+    public CursosController(CursosService service) {
+        this.service = service;
+    }
 
     @GetMapping
-    public List<Cursos> listar() {
-        return cursosService.listarTodos();
+    public List<CursosDTO> getAll(@RequestParam(required = false) String nombre) {
+        if (nombre != null) {
+            return service.findByNombre(nombre);
+        }
+        return service.getAll();
     }
 
     @GetMapping("/{id}")
-    public Optional<Cursos> obtener(@PathVariable Integer id) {
-        return cursosService.obtenerPorId(id);
+    public ResponseEntity<CursosDTO> getById(@PathVariable Integer id) {
+        return service.getById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public Cursos crear(@RequestBody Cursos curso) {
-        return cursosService.guardar(curso);
+    public Cursos create(@RequestBody Cursos curso) {
+        return service.save(curso);
     }
 
     @DeleteMapping("/{id}")
-    public void eliminar(@PathVariable Integer id) {
-        cursosService.eliminar(id);
-    }
-
-    @GetMapping("/buscar")
-    public Cursos buscarPorNombre(@RequestParam String nombre) {
-        return cursosService.buscarPorNombre(nombre);
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
-
